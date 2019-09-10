@@ -6,7 +6,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 
 @Entity
-data class GroceryItem(var name: String, var isFinished: Boolean) {
+data class GroceryItem(var name: String, var isAvailable: Boolean) {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
