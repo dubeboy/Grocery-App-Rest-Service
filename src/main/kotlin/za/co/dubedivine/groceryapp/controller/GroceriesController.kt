@@ -31,24 +31,30 @@ class GroceriesController(private val groceryRepository: GroceryItemRepository) 
         val item = groceryRepository.findById(id)
         return when {
             item.isPresent -> {
-                ResponseEntity(StatusResponseEntity(true, "deleted item ${item.get().name} from list ", null), HttpStatus.OK)
+                ResponseEntity(
+                        StatusResponseEntity(true, "deleted item ${item.get().name} from list ", true),
+                        HttpStatus.OK
+                )
             }
             else -> {
-                ResponseEntity(StatusResponseEntity(false, "sorry could not find item to delete", null), HttpStatus.NOT_FOUND)
+                ResponseEntity<StatusResponseEntity<Boolean>>(
+                        StatusResponseEntity(false, "sorry could not find item to delete", false),
+                        HttpStatus.NOT_FOUND
+                )
             }
         }
     }
-    @PostMapping("/available}")
+    @PostMapping("/available")
     fun toggleGroceryItemAvailability(@RequestBody availability: Boolean, @RequestParam("id") id: Long): ResponseEntity<StatusResponseEntity<Boolean>> {
         val item = groceryRepository.findById(id)
         return when {
             item.isPresent -> {
                 item.get().isAvailable = availability
                 groceryRepository.save(item.get())
-                ResponseEntity(StatusResponseEntity(true, "item ${item.get().name} is now ${if (availability) "available" else "finished"} ", null), HttpStatus.OK)
+                ResponseEntity(StatusResponseEntity(true, "item ${item.get().name} is now ${if (availability) "available" else "finished"} ", true), HttpStatus.OK)
             }
             else -> {
-                ResponseEntity(StatusResponseEntity(false, "sorry could not find that item", null), HttpStatus.NOT_FOUND)
+                ResponseEntity(StatusResponseEntity(false, "sorry could not find that item", false), HttpStatus.NOT_FOUND)
             }
         }
     }
